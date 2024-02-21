@@ -143,7 +143,7 @@ if __name__ == '__main__':
         print("Database already exists.")
     
     
-    st.title("Arsenal Football Club Chatbot - RAG")
+    st.title("gpt-3.5-turbo")
     
     if "message" not in st.session_state:
         st.session_state.messages = []
@@ -173,7 +173,7 @@ if __name__ == '__main__':
             chat_completion = get_response(
                 client,
                 system_content="",
-                assistant_content="".join(context),
+                # assistant_content="".join(context),
                 user_content=prompt
             )
             response = st.write_stream(chat_completion)
