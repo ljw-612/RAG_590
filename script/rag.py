@@ -50,6 +50,10 @@ def make_embeddings(client, chunks):
     
     
 def create_database(database_name):
+    '''
+    This funciton creates a database to store the embeddings.
+    Columns: id, text, embedding
+    '''
     conn = sqlite3.connect(database_name)
     c = conn.cursor()
     c.execute("SELECT count(name) FROM sqlite_master WHERE type='table' AND name='embeddings'")
@@ -64,6 +68,9 @@ def create_database(database_name):
     
     
 def insert_embedding(database_name, text, embedding):
+    '''
+    This function inserts the text and its embedding into the database.
+    '''
     conn = sqlite3.connect(database_name)
     c = conn.cursor()
     
@@ -73,6 +80,9 @@ def insert_embedding(database_name, text, embedding):
     conn.close()
 
 def search_similar_text(database_name, query_embedding, num_results=5):
+    '''
+    This function performs the 
+    '''
     conn = sqlite3.connect(database_name)
     c = conn.cursor()
     c.execute("SELECT text, embedding FROM embeddings")
@@ -114,7 +124,7 @@ def check_db_exists(database_name):
 
 
 if __name__ == '__main__':
-    # Load the environment variables (API keys)
+    
     
     pdf_file = '../data/Arsenal_FC.pdf'
     
@@ -122,6 +132,7 @@ if __name__ == '__main__':
     
     chunks = chunking(text)
     
+    # Load the environment variables (API keys)
     load_dotenv()
     
     client = OpenAI()
@@ -143,6 +154,7 @@ if __name__ == '__main__':
         print("Database already exists.")
     
     
+    # frontend building
     st.title("Arsenal Football Club Chatbot - RAG")
     
     if "message" not in st.session_state:
@@ -154,16 +166,13 @@ if __name__ == '__main__':
             pass
     
     # Accept user input
-    # prompt = "tell me about arsenal football club."
     if prompt := st.chat_input("What is up?"):
         # Add user message to chat history
         st.session_state.messages.append({"role": "user", "content": prompt})
         # Display user message in chat message container
         with st.chat_message("user"):
             st.markdown(prompt)
-    
-    # print("prompt: ", prompt)
-    
+        
     with st.chat_message("assistant"):
         if prompt:
             prompt_embedding = make_embeddings(client, [prompt])[0]
